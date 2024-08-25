@@ -1,28 +1,11 @@
-# daily QA reports dashboard App
+# To-do App
 
-This Application helps user to show Nightly build reports, it will show everyday report on the header and user can select the date from the calender to view the perticular day reports.
+This Application helps user to add to-do items,view items, update items and delete items.
 
-## The report consist of following data on the table :
-
-Test_name: \
-No_of_test_cases: \
-Passed: \
-Failed: \
-perofpass: \
-Skipped: \
-start_time: \
-end_time: \
-Logfile: \
-os_version: \
-kernel_version: \
-release_version: \
-build_version:  \
-module_name: \
-marker_tag: \
 
 The procedure to setup this Application: \
 clone the repository using link
-https://gitenterprise.xilinx.com/appurajk/ma35_dashboard.git
+https://github.com/appurajk/Todo-App-FastAPI.git
 
 Create python environment
     $ python -m venv venv \
@@ -31,20 +14,27 @@ Create python environment
 
 
 MongoDB Driver
+download https://www.mongodb.com/
+install mongodb server
 
-$ git clone --branch 1.14.0 https://github.com/mongodb/mongo-c-driver.git \
-    && cd mongo-c-driver \
-    && mkdir cmake-build \
-    && cd cmake-build \
-    && cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF .. \
-    && make \
-    && make install 
-    
-    
 Start the mongodb server<br />
 $ mongo
 
-Start ma35_dashboard \
-$ cd ma35_dashboard \
+Project directory has the following structure:
+
+Todo-App-FastAPI/
+│
+├── main.py
+├── models/
+│   ├── __init__.py
+│   └── todo_models.py
+├── repositories/
+│   └── todo_repository.py
+└── services/
+    └── todo_service.py
+
+$ cd Todo-App-FastAPI \
 $ python main.py
 
+goto-http://localhost:8000/docs
+make use of UISwagger to drive the Application. 

@@ -1,414 +1,48 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>MA35 1.1 Daily</title>
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
-<link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
-<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="/static/main.css?v=1.0.0">
-<link rel="stylesheet" href="/static/style.css?v=1.0.0">
-
+    <title>Add To-Do Item</title>
 </head>
 <body>
-    <div class="header">
-        <div class="content">
-            <h3 style="text-align: center">MA35 1.2.0 Daily Dashboard</h3>
-        </div>
-        <a href="/" style="font-size:40px; position:fixed; margin-left: -49%;margin-top: -1.5%;"><i class="fa fa-home" ></i></a>
-            <center>
-            <form method="get" action="/select">
-                <a href="select?day={{ prev }}&tag={{ tag}}%2F"><i class="fa fa-chevron-circle-left" style="font-size:25px;"></i></a>
-                <input type="date" class='btn btn-success' id="date-picker" name="day" value="{{ date }}" min="2023-11-28">
-                <a href="select?day={{ next }}&tag={{ tag}}%2F"><i class="fa fa-chevron-circle-right" style="font-size:25px;"></i></a>
-                <select class="btn btn-primary" name="tag" id="tag">
-                    {% if tag == "release/v1.1.2" %}
-                        <option value="release/v1.2.0">release/v1.2.0</option>
-                        <option value="release/v1.1.2" selected>release/v1.1.2</option>
-                        <option value="develop">develop</option> 
-                    {% elif tag == "develop" %}
-                        <option value="release/v1.2.0">release/v1.2.0</option>
-                        <option value="release/v1.1.2">release/v1.1.2</option>
-                        <option value="develop" selected>develop</option>
-                    {% elif tag == "release/v1.2.0" %}
-                        <option value="release/v1.2.0" selected>release/v1.2.0</option>
-                        <option value="release/v1.1.2">release/v1.1.2</option>
-                        <option value="develop" >develop</option>
-                    {% else %}
-                        <option value="release/v1.2.0">release/v1.2.0</option>
-                        <option value="release/v1.1.2">release/v1.1.2</option>
-                        <option value="develop" selected>develop</option>
-                    {% endif %}
-                </select>
-                <button class="btn btn-danger" type="submit">submit</button>
-            </form>
-    </center>  
-       
-    <div class="text-right" style="margin-top:-23px;margin-right:2%;">
-            <div class="dropdown" style="font-size:14px;margin-right:1%;">
-                <button onclick="myFunction()" class="dropbtn" name="day">rel_versions</button>
-                <form  method="post">
-                <div id="myDropdown" class="dropdown-content">
-                    {% for bk in bookmark %}  
-                    <a href="select?day={{bk['Date']}}&tag={{bk['tag']}}%2F">{{bk['bookmark_name']}}</a>                                  
-                    {% endfor %}  
-                </div>  
-            </form> 
-                </div>
-                <a href="/login"><i class="fa fa-gear" style="font-size:24px;" > </i></a>
-            </div>    
-    </div>
-    
-<!---------------------------Header-End-------------------------------------------->
-<table  style="position:relative;margin-top:5%; background-color: #f2f2f2; border: #fff;">
-    <tr>
-        <td valign="top">
-            
-    {% if linux_baremetal[0] %}
-    <table>
-      <tr style="background-color: burlywood;font-size: small;">    
-        <td style="padding: 0%;"><b>LINUX BAREMETAL</b></td>
-        <td style="padding: 0%;"><b>OS_Version: {{linux_baremetal[0]['os_version']}}</b></td>
-        <td style="padding: 0%;"><b>KERNEL_Version: {{linux_baremetal[0]['kernel_version']}}</b></td>
-    </tr>  
-    </table>
-    <table id="reports" style="font-size: small;">
-<tr>
-    <th> &nbsp; Test Name</th>
-    <th style="text-align: right;">Author</th>
-    <th style="text-align: right;">Total</th>
-    <th style="text-align: right;">Pass</th>
-    <th style="text-align: right;">Fail</th>
-    <th><center>% of pass</center></th>
-    <th><center>Start</center></th>
-    <th><center>End</center></th>
-</tr>
-    {% for itm in linux_baremetal %}                                    
-    <tr>
-        <td style="max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;font-size: medium;"><a href="{{itm['Logfile']}}"> &nbsp; {{itm['Test_name'] }}</a></td>
-        <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-        <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-        <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-        <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_on_windows',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-        <td>
-            <div class="progress_container">
-                <div class="progress_item">
-                    <div class="progress_bar">
-                        <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                    </div>
-                </div>  
-            </div>    
-        </td>
-        <td><center>{{itm['start_time']}}</center></td>
-        <td><center>{{itm['end_time']}}</center></td>
-    </tr>
-    {% endfor %}  
-        </table>
-    {% endif %}
-        </td>
-    <!-- ------------------------------------------- -->
-        <td valign="top">
-        {% if linux_on_windows[0] %}
-        <table style="background-color: burlywood;font-size: small;margin-top: 0%;">
-            <tr>
-            <td style="padding: 0%;"><b>LINUX ON WINDOWS</b></td>
-            <td style="padding: 0%;"><b>OS_Version: {{linux_on_windows[0]['os_version']}}</b></td>
-            <td style="padding: 0%;"><b>KERNEL_Version: {{linux_on_windows[0]['kernel_version']}}</b></td>
-        </tr>
-        </table>
-        <table id="reports" style="font-size: small;">
-            <tr>
-                <th> &nbsp; Test Name</th>
-                <th style="text-align: right;">Author</th>
-                <th style="text-align: right;">Total</th>
-                <th style="text-align: right;">Pass</th>
-                <th style="text-align: right;">Fail</th>
-                <th><center>% of pass</center></th>
-                <th><center>Start</center></th>
-                <th><center>End</center></th>
-            </tr>
-                {% for itm in linux_on_windows %}                                    
-                <tr>
-                    <td style="max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;font-size: medium;"><a href="{{itm['Logfile']}}"> &nbsp; {{itm['Test_name'] }}</a></td>
-                    <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                    <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                    <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                    <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_on_windows',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                    <td>
-                        <div class="progress_container">
-                            <div class="progress_item">
-                                <div class="progress_bar">
-                                    <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                                </div>
-                            </div>  
-                        </div>    
-                    </td>
-                    <td><center>{{itm['start_time']}}</center></td>
-                    <td><center>{{itm['end_time']}}</center></td>
-                </tr>
-                {% endfor %}  
-                </table>
-        {% endif %}
-        </td>       
-    </tr>
-    <!-- ------------------------------------------- -->
-    <tr>
-        <td valign="top">
-            {% if linux_on_linux[0] %}
-            <table style="background-color: burlywood;font-size: small;">
-                <tr>
-                  <td style="padding: 0%;"><b>LINUX ON LINUX</b></td>
-                  <td style="padding: 0%;"><b>OS_Version: {{linux_on_linux[0]['os_version']}}</b></td>
-                  <td style="padding: 0%;"><b>KERNEL_Version: {{linux_on_linux[0]['kernel_version']}}</b></td>
-              </tr>
-              </table>
-              <table id="reports" style="font-size: small;">
-                    <tr>
-                    <th> &nbsp; Test Name</th>
-                    <th style="text-align: right;">Author</th>
-                    <th style="text-align: right; ">Total</th>
-                    <th style="text-align: right; ">Pass</th>
-                    <th style="text-align: right; ">Fail</th>
-                    <th><center>% of pass</center></th>
-                    <th><center>Start</center></th>
-                    <th><center>End</center></th>
-                </tr>
-                    {% for itm in linux_on_linux %}                                    
-                    <tr>
-                        <td style="max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;font-size: medium;"><a href="{{itm['Logfile']}}"> &nbsp; {{itm['Test_name'] }}</a></td>
-                        <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                        <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                        <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                        <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_on_windows',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                        <td>
-                            <div class="progress_container">
-                                <div class="progress_item">
-                                    <div class="progress_bar">
-                                        <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                                    </div>
-                                </div>  
-                            </div>    
-                        </td>
-                        <td><center>{{itm['start_time']}}</center></td>
-                        <td><center>{{itm['end_time']}}</center></td>
-                    </tr>
-                    {% endfor %}  
-                    </table>
-            {% endif %}
-        </td>
-    <!-- ------------------------------------------- -->
-        <td valign="top">
-        {% if windows_on_windows[0] %}
-        <div class="content"style="margin-top:0%; margin-left:0%;width:100%;">
-        <table style="background-color: burlywood;font-size: small;border-top-left-radius: 5%;border-top-right-radius: 5%;">
-            <tr>
-            <td style="padding: 0%;"><b>WINDOWS ON WINDOWS</b></td>
-            <td style="padding: 0%;"><b>OS_Version: {{windows_on_windows[0]['os_version']}}</b></td>
-            <td style="padding: 0%;"><b>KERNEL_Version: {{windows_on_windows[0]['kernel_version']}}</b></td>
-        </tr>
-        </table>
-        <table id="reports" style="font-size: small;">
-            <tr>
-                <th> &nbsp; Test Name</th>
-                <th style="text-align: right;">Author</th>
-                <th style="text-align: right;">Total</th>
-                <th style="text-align: right;">Pass</th>
-                <th style="text-align: right;">Fail</th> 
-                <th><center>% of pass</center></th>
-                <th><center>Start</center></th>
-                <th><center>End</center></th>
-            </tr>
-                {% for itm in windows_on_windows %}                                    
-                <tr>
-                    <td style="max-width: 80px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;font-size: medium;"><a href="{{itm['Logfile']}}"> &nbsp; {{itm['Test_name'] }}</a></td>
-                    <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                    <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                    <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                    <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_on_windows',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                    <td>
-                        <div class="progress_container">
-                            <div class="progress_item">
-                                <div class="progress_bar">
-                                    <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                                </div>
-                            </div>  
-                        </div>    
-                    </td>
-                    <td><center>{{itm['start_time']}}</center></td>
-                    <td><center>{{itm['end_time']}}</center></td>
-                </tr>
-                {% endfor %}  
-                </table>
-            </div>
-            {% endif %}
-            <!-- <hr> -->
-        <table id="reports">
-            <div class="content">
-                <h4 style="text-align: center;-webkit-text-fill-color: #f2f2f2; background-color: black;">Fmg Perf Qa Daily Dashboard</h4>
-            </div>
-            <!-- <div class="content" style="background-color:burlywood ; width: 100%;">
-                <h4 style="text-align: center;">Fmg Perf Qa Dashboard</h4>
-            </div> -->
-            
-            <tr>
-                <th>&nbsp;Type</th>
-                <th style="text-align: right;">Author</th>
-                <th style="text-align: right;">Total</th>
-                <th style="text-align: right;">Pass</th>
-                <th style="text-align: right;">Fail</th>
-                <th><center>% of pass</center></th>
-            </tr>
-            {% for itm in linux_baremetal %}   
-            {% if itm['Test_name']=='fmg_perf_qa' %}
-            <tr>
-                <td style="font-size: medium;"><a href="{{itm['Logfile']}}">&nbsp;Linux Baremetal</a></td>
-                <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_baremetal',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                <td>
-                    <div class="progress_container">
-                        <div class="progress_item">
-                            <div class="progress_bar">
-                                <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                            </div>
-                        </div>  
-                    </div>    
-                </td>
-                <td></td>
-            </tr>
-            {% endif %}
-            {% endfor %}  
+    <h1>Add To-Do Item</h1>
+    <form id="todoForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
 
-            {% for itm in linux_on_windows %}   
-            {% if itm['Test_name']=='fmg_perf_qa' %}
-            <tr>
-                <td style="font-size: medium;"><a href="{{itm['Logfile']}}">&nbsp;Linux on Windows</a></td>
-                <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_on_windows',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                <td>
-                    <div class="progress_container">
-                        <div class="progress_item">
-                            <div class="progress_bar">
-                            <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                            </div>
-                        </div>  
-                    </div>    
-                </td>
-                <td></td>
-            </tr>
-            {% endif %}
-            {% endfor %}  
-            
-            {% for itm in linux_on_linux %}   
-            {% if itm['Test_name']=='fmg_perf_qa' %}
-                <tr>
-                <td style="font-size: medium;"><a href="{{itm['Logfile']}}">&nbsp;Linux on Linux</a></td>
-                <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='linux_on_linux',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                <td>
-                    <div class="progress_container">
-                        <div class="progress_item">
-                            <div class="progress_bar">
-                            <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                            </div>
-                        </div>  
-                    </div>    
-                </td>
-                <td></td>
-                </tr>
-                {% endif %}
-                {% endfor %}  
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br><br>
 
-                {% for itm in windows_on_windows %}
-                {% if itm['Test_name']=='fmg_perf_qa' %}
-            <tr>
-                <td style="font-size: medium;"><a href="{{itm['Logfile']}}">&nbsp;Windows on Windows</a></td>
-                <td style="text-align: right; font-size: medium;max-width: 50px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ author_mapping[itm['Test_name']] }}</td>
-                <td style="text-align: right; font-size: medium;">{{itm["No_of_test_cases"]}}</td>
-                <td style="color:rgb(15, 113, 55); text-align: right; font-size: medium;"><b>{{itm["Passed"]}}</b></td>
-                <td style="color:rgba(107, 0, 5, 0.703); text-align: right; font-size: medium;" onclick="openModal('{{date}}','{{ tag }}',type='windows_on_windows',test_name='{{itm['Test_name']}}')"><b>{{itm["Failed"]}}</b></td>
-                <td>
-                    <div class="progress_container">
-                        <div class="progress_item">
-                            <div class="progress_bar">
-                            <div class="bar" style="width: {{ itm['perofpass'] }}%;" data-text="{{ itm['perofpass'] }}"></div>
-                            </div>
-                        </div>  
-                    </div>    
-                </td>
-                <td></td>
-            </tr>
-            {% endif %}
-            {% endfor %}                      
-        </table>
-        </td>
-    </tr>
-</table>
-</div>
-{% if msg %}
-<h3 style="text-align: center">{{msg}}</h3>
-{% endif %}
+        <label for="completed">Completed:</label>
+        <input type="checkbox" id="completed" name="completed"><br><br>
 
-<script>
-const datePicker = document.getElementById("date-picker");
-datePicker.min = getDate(-90);
-datePicker.max = getDate();
-function getDate(days) {
-    let date;
-    if (days !== undefined) {
-        date = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
-    } else {
-        date = new Date();
-    }
-    const offset = date.getTimezoneOffset();
-    date = new Date(date.getTime() - (offset*60*1000));
-    return date.toISOString().split("T")[0];
-}
+        <button type="submit">Add To-Do</button>
+    </form>
 
-// Bookmark hover
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-}
+    <script>
+        document.getElementById('todoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const completed = document.getElementById('completed').checked;
+
+            const response = await fetch('http://127.0.0.1:8000/todos/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: title,
+                    description: description,
+                    completed: completed
+                })
+            });
+
+            const result = await response.json();
+            console.log(result);
+        });
     </script>
-    <!-- JavaScript to trigger the modal -->
-<script>
-        function openModal(date, tag, type, test_name) {
-            var url = '/viewlogfiles?day='+date+'&tag='+tag+'/'+'&type='+type+'&test_name='+test_name+'%2F';
-            console.log(url)
-            window.location.href = url;
-            // $('#fileModal').modal('show');
-       }
-   </script>
-    <!-- Include Bootstrap JavaScript at the bottom of the body -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
