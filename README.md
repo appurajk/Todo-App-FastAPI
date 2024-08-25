@@ -31,7 +31,9 @@ Todo-App-FastAPI/
 ├── repositories/
 │   └── todo_repository.py
 └── services/
-    └── todo_service.py
+|    └── todo_service.py
+|___utils/
+     |__ db_connect.py
 
 $ cd Todo-App-FastAPI \
 $ python main.py
